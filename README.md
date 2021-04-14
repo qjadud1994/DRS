@@ -33,10 +33,10 @@ We propose the discriminative region suppression (DRS) module that is a simple y
     `pip install -r requirements.txt`
 
 
-## Train & Pseudo Segmentation Labels Generation
+## Training & Pseudo Segmentation Labels Generation
 * step1 : training the classifier with DRS modules
 * step2 : training the refinement network for the localization maps refinement
-* step3 : generating pseudo segmentation labels
+* step3 : pseudo segmentation labels generation
 
 ~~~ 
 # all-in-one
@@ -51,7 +51,7 @@ bash run.sh
 | Pseudo Segmentation Labels | [refined_pseudo_segmentation_labels/](https://drive.google.com/drive/folders/1IS9_YCrRJwz3c7y3KwTET2_dYUPlNYo6?usp=sharing) |
 
 
-# Training the DeepLab-V2 using pseudo labels
+## Training the DeepLab-V2 using pseudo labels
 We adopt the DeepLab-V2 pytorch implementation from https://github.com/kazuto1011/deeplab-pytorch.
 
 ~~~
