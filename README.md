@@ -5,7 +5,7 @@ Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation [[
 
 We propose the discriminative region suppression (DRS) module that is a simple yet effective method to expand object activation regions. DRS suppresses the attention on discriminative regions and spreads it to adjacent non-discriminative regions, generating dense localization maps.
 
-![Localization maps](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_CAM.png)
+<img src = "https://github.com/qjadud1994/DRS/blob/main/docs/DRS_CAM.png" width="60%" height="60%">
 
 ![DRS module](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_module.png)
 
@@ -34,9 +34,9 @@ We propose the discriminative region suppression (DRS) module that is a simple y
 
 
 ## Train & Pseudo Segmentation Labels Generation
-step1 : training the classifier with DRS modules
-step2 : training the refinement network for the localization maps refinement
-step3 : generating pseudo segmentation labels
+* step1 : training the classifier with DRS modules
+* step2 : training the refinement network for the localization maps refinement
+* step3 : generating pseudo segmentation labels
 
 ~~~ 
 # all-in-one
@@ -71,10 +71,10 @@ bash eval.sh
 | :----:  | :----: | :----: | :----: |
 | DeepLab-V2 with ResNet-101 | 69.4% | 70.4% | [[link]](https://drive.google.com/drive/folders/1zJnRI5WRnv4cL9XY5jAojwIcO7MrUwun?usp=sharing)
 
-* Note that pretrained weight path : `DeepLab-V2-Pytorch/data/models/Deeplabv2_pseudo_segmentation_labels/deeplabv2_resnet101_msc/train_cls/checkpoint_final.pth`
+* Note that the pretrained weight path
+`./DeepLab-V2-Pytorch/data/models/Deeplabv2_pseudo_segmentation_labels/deeplabv2_resnet101_msc/train_cls/checkpoint_final.pth`
 
-![Segmentation results](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_segmap.png)
-
+<img src = "https://github.com/qjadud1994/DRS/blob/main/docs/DRS_segmap.png" width="60%" height="60%">
 
 ## Citation
 We hope that you find this work useful. If you would like to acknowledge us, please, use the following citation:
