@@ -5,16 +5,16 @@ Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation [[
 
 We propose the discriminative region suppression (DRS) module that is a simple yet effective method to expand object activation regions. DRS suppresses the attention on discriminative regions and spreads it to adjacent non-discriminative regions, generating dense localization maps.
 
-![Localization maps](./docs/DRS/DRS_CAM.png)
+![Localization maps](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_CAM.png)
 
-![DRS module](./docs/DRS/DRS_module.png)
+![DRS module](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_module.png)
 
 ## Setup
 
 1. Dataset Preparing
 
     * [Download PASCAL VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/#devkit)
-    * you can obtain `SegmentationClassAug/` [link](https://drive.google.com/drive/folders/1_ik8n5Q4C77X-aIfKiqidFEDQ6zY9JNM?usp=sharing) (augmented with SBD dataset).
+    * you can obtain `SegmentationClassAug/` [[link]](https://drive.google.com/drive/folders/1_ik8n5Q4C77X-aIfKiqidFEDQ6zY9JNM?usp=sharing) (augmented with SBD dataset).
     * [Download saliency maps](https://drive.google.com/drive/folders/1I-456-_OFVWhZdCBBPW9NSIkr0H3FBeP?usp=sharing) used for background cues.
     
     ~~~
@@ -69,11 +69,11 @@ bash eval.sh
 
 | Model | mIoU | mIoU + CRF | pretrained |
 | :----:  | :----: | :----: | :----: |
-| DeepLab-V2 with ResNet-101 | 69.4% | 70.4% | [link](https://drive.google.com/drive/folders/1zJnRI5WRnv4cL9XY5jAojwIcO7MrUwun?usp=sharing)
+| DeepLab-V2 with ResNet-101 | 69.4% | 70.4% | [[link]](https://drive.google.com/drive/folders/1zJnRI5WRnv4cL9XY5jAojwIcO7MrUwun?usp=sharing)
 
 * Note that pretrained weight path : `DeepLab-V2-Pytorch/data/models/Deeplabv2_pseudo_segmentation_labels/deeplabv2_resnet101_msc/train_cls/checkpoint_final.pth`
 
-![Segmentation results](./docs/DRS/DRS_segmap.png)
+![Segmentation results](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_segmap.png)
 
 
 ## Citation
