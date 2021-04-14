@@ -3,6 +3,9 @@
 Official pytorch implementation of our paper:
 Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation [[Paper]](https://arxiv.org/abs/2103.07246), Beomyoung Kim, Sangeun Han, and Junmo Kim, AAAI 2021
 
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/discriminative-region-suppression-for-weakly/weakly-supervised-semantic-segmentation-on-1)](https://paperswithcode.com/sota/weakly-supervised-semantic-segmentation-on-1?p=discriminative-region-suppression-for-weakly)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/discriminative-region-suppression-for-weakly/weakly-supervised-semantic-segmentation-on)](https://paperswithcode.com/sota/weakly-supervised-semantic-segmentation-on?p=discriminative-region-suppression-for-weakly)
+
 We propose the discriminative region suppression (DRS) module that is a simple yet effective method to expand object activation regions. DRS suppresses the attention on discriminative regions and spreads it to adjacent non-discriminative regions, generating dense localization maps.
 
 <img src = "https://github.com/qjadud1994/DRS/blob/main/docs/DRS_CAM.png" width="60%" height="60%">
