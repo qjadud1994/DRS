@@ -76,6 +76,7 @@ bash eval.sh
 
 * Note that the pretrained weight path
 `./DeepLab-V2-Pytorch/data/models/Deeplabv2_pseudo_segmentation_labels/deeplabv2_resnet101_msc/train_cls/checkpoint_final.pth`
+* According to the [DeepLab-V2 pytorch implementation](https://github.com/kazuto1011/deeplab-pytorch#download-pre-trained-caffemodels) we used, we requires an initial weights [[download]](https://drive.google.com/file/d/1Wj8Maj9KGQgwtDfvIp8FChsdAIgDvliT/view?usp=sharing).
 
 <img src = "https://github.com/qjadud1994/DRS/blob/main/docs/DRS_segmap.png" width="60%" height="60%">
 
