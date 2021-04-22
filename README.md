@@ -83,10 +83,10 @@ bash eval.sh
 ## Citation
 We hope that you find this work useful. If you would like to acknowledge us, please, use the following citation:
 ~~~
-@article{kim2021discriminative,
-  title={Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation},
-  author={Kim, Beomyoung and Kim, Sangeun Han and Kim, Junmo},
-  journal={arXiv preprint arXiv:2103.07246},
-  year={2021}
+@inproceedings{kim2021discriminative,
+    title={Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation},
+    author={Kim, Beomyoung and Kim, Sangeun Han and Kim, Junmo},
+    year={2021},
+    booktitle={AAAI Conference on Artificial Intelligence},
 }
 ~~~
