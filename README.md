@@ -85,7 +85,7 @@ We hope that you find this work useful. If you would like to acknowledge us, ple
 ~~~
 @inproceedings{kim2021discriminative,
     title={Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation},
-    author={Kim, Beomyoung and Kim, Sangeun Han and Kim, Junmo},
+    author={Kim, Beomyoung and Han, Sangeun and Kim, Junmo},
     year={2021},
     booktitle={AAAI Conference on Artificial Intelligence},
 }
