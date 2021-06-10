@@ -8,6 +8,8 @@ Discriminative Region Suppression for Weakly-Supervised Semantic Segmentation [[
 
 We propose the discriminative region suppression (DRS) module that is a simple yet effective method to expand object activation regions. DRS suppresses the attention on discriminative regions and spreads it to adjacent non-discriminative regions, generating dense localization maps.
 
+[2021.06.10] we support DeepLab-V3 segmentation network! 
+
 <img src = "https://github.com/qjadud1994/DRS/blob/main/docs/DRS_CAM.png" width="60%" height="60%">
 
 ![DRS module](https://github.com/qjadud1994/DRS/blob/main/docs/DRS_module.png)
@@ -57,6 +59,8 @@ bash run.sh
 ## Training the DeepLab-V2 using pseudo labels
 We adopt the DeepLab-V2 pytorch implementation from https://github.com/kazuto1011/deeplab-pytorch.
 
+* According to the [DeepLab-V2 pytorch implementation](https://github.com/kazuto1011/deeplab-pytorch#download-pre-trained-caffemodels) , we requires an initial weights [[download]](https://drive.google.com/file/d/1Wj8Maj9KGQgwtDfvIp8FChsdAIgDvliT/view?usp=sharing).
+
 ~~~
 cd DeepLab-V2-PyTorch/
 
@@ -70,13 +74,30 @@ bash train.sh
 bash eval.sh
 ~~~
 
+## Training the DeepLab-V3+ using pseudo labels
+We adopt the DeepLab-V3+ pytorch implementation from https://github.com/VainF/DeepLabV3Plus-Pytorch.
+
+Note that **DeepLab-V2** suffers from the small batch issue, therefore, they utilize COCO pretrained weight and freeze batch-normalization layers; DeepLab-V2 without COCO-pretrained weight cannot reproduce their performance even in fully-supervised setting.
+
+In contrast, **DeepLab-V3 does not require the COCO-pretrained weight** due to the recent large memory GPUs and Synchronized BatchNorm.
+We argue that the choice of DeepLab-V3 network is more reasonable and better to measure the quality of pseudo labels.
+
+~~~
+cd DeepLabV3Plus-Pytorch/
+
+# training & evaluation the DeepLab-V3+ using pseudo labels
+vi run.sh # modify the dataset path --data_root
+bash run.sh
+~~~
+
 | Model | mIoU | mIoU + CRF | pretrained |
 | :----:  | :----: | :----: | :----: |
 | DeepLab-V2 with ResNet-101 | 69.4% | 70.4% | [[link]](https://drive.google.com/drive/folders/1zJnRI5WRnv4cL9XY5jAojwIcO7MrUwun?usp=sharing)
+| DeepLab-V3+ with ResNet-101 | 70.4% | 71.0% | [[link]](https://drive.google.com/file/d/1W1LV3gvBPRr2lIlWdvqZ-cs87qYT8Nax/view?usp=sharing)
 
 * Note that the pretrained weight path
 `./DeepLab-V2-Pytorch/data/models/Deeplabv2_pseudo_segmentation_labels/deeplabv2_resnet101_msc/train_cls/checkpoint_final.pth`
-* According to the [DeepLab-V2 pytorch implementation](https://github.com/kazuto1011/deeplab-pytorch#download-pre-trained-caffemodels) we used, we requires an initial weights [[download]](https://drive.google.com/file/d/1Wj8Maj9KGQgwtDfvIp8FChsdAIgDvliT/view?usp=sharing).
+
 
 <img src = "https://github.com/qjadud1994/DRS/blob/main/docs/DRS_segmap.png" width="60%" height="60%">
 

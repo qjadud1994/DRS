@@ -131,3 +131,15 @@ dmypy.json
 
 checkpoints/
 logs/
+DeepLab-V2-PyTorch/data/
+DeepLab-V2-PyTorch/__pycache__/
+DeepLab-V2-PyTorch/libs/__pycache__/
+
+
+DeepLabV3Plus-Pytorch/checkpoints
+DeepLabV3Plus-Pytorch/__pycache__
+DeepLabV3Plus-Pytorch/datasets/__pycache__
+DeepLabV3Plus-Pytorch/metrics/__pycache__
+DeepLabV3Plus-Pytorch/network/__pycache__
+DeepLabV3Plus-Pytorch/utils/__pycache__
+
