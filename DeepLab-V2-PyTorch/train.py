@@ -26,7 +26,6 @@ from libs.models import *
 from libs.utils import PolynomialLR
 from libs.utils.stream_metrics import StreamSegMetrics, AverageMeter
 
-
 def get_argparser():
     parser = argparse.ArgumentParser()
 
@@ -148,13 +147,13 @@ def main():
         dataset=train_dataset,
         batch_size=CONFIG.SOLVER.BATCH_SIZE.TRAIN,
         num_workers=CONFIG.DATALOADER.NUM_WORKERS,
-        shuffle=True,
+        shuffle=True, pin_memory=True, drop_last=True,
     )
     valid_loader = torch.utils.data.DataLoader(
         dataset=valid_dataset,
         batch_size=CONFIG.SOLVER.BATCH_SIZE.TEST,
         num_workers=CONFIG.DATALOADER.NUM_WORKERS,
-        shuffle=False,
+        shuffle=False, pin_memory=True,
     )
     
     # Model check
@@ -222,30 +221,40 @@ def main():
     makedirs(checkpoint_dir)
     print("Checkpoint dst:", checkpoint_dir)
 
-    model.train()
-
+    def set_train(model):
+        model.train()
+        model.module.base.freeze_bn()
+        
     metrics = StreamSegMetrics(CONFIG.DATASET.N_CLASSES)
     
     scaler = torch.cuda.amp.GradScaler(enabled=opts.amp)
     avg_loss = AverageMeter()
     avg_time = AverageMeter()
     
-    curr_iter = 0
+    set_train(model)
     best_score = 0
     end_time = time.time()
     
-    while True:
-        for _, images, labels, cls_labels in train_loader:
-            curr_iter += 1
-            loss = 0
-            
-            optimizer.zero_grad()
-            
+    for iteration in range(1, CONFIG.SOLVER.ITER_MAX + 1):
+        # Clear gradients (ready to accumulate)
+        optimizer.zero_grad()
+        
+        loss = 0
+        for _ in range(CONFIG.SOLVER.ITER_SIZE):
+            try:
+                _, images, labels, cls_labels = next(train_loader_iter)
+            except:
+                train_loader_iter = iter(train_loader)
+                _, images, labels, cls_labels = next(train_loader_iter)
+                avg_loss.reset()
+                avg_time.reset()
+
             with torch.cuda.amp.autocast(enabled=opts.amp):
                 # Propagate forward
-                logits = model(images.to(device))
+                logits = model(images.to(device, non_blocking=True))
 
                 # Loss
+                iter_loss = 0
                 for logit in logits:
                     # Resize labels for {100%, 75%, 50%, Max} logits
                     _, _, H, W = logit.shape
@@ -254,61 +263,63 @@ def main():
                     pseudo_labels = logit.detach() * cls_labels[:, :, None, None].to(device)
                     pseudo_labels = pseudo_labels.argmax(dim=1)
 
-                    _loss = criterion(logit, labels_.to(device)) + criterion(logit, pseudo_labels)
+                    _loss = criterion(logit, labels_.to(device, )) + criterion(logit, pseudo_labels)
 
-                    loss += _loss
+                    iter_loss += _loss
 
                 # Propagate backward (just compute gradients wrt the loss)
-                loss = (loss / len(logits))
+                iter_loss /= CONFIG.SOLVER.ITER_SIZE
                 
-            scaler.scale(loss).backward()
-            scaler.step(optimizer)
-            scaler.update()
+            scaler.scale(iter_loss).backward()
+            loss += iter_loss.item()
             
-            # Update learning rate
-            scheduler.step()
-            avg_loss.update(loss.item())
-            avg_time.update(time.time() - end_time)
+        # Update weights with accumulated gradients
+        scaler.step(optimizer)
+        scaler.update()
+
+        # Update learning rate
+        scheduler.step(epoch=iteration)
+        
+        avg_loss.update(loss)
+        avg_time.update(time.time() - end_time)
+        end_time = time.time()
+
+        # TensorBoard
+        if iteration % 100 == 0:
+            print(" Itrs %d/%d, Loss=%6f, Time=%.2f , LR=%.8f" %
+              (iteration, CONFIG.SOLVER.ITER_MAX, 
+               avg_loss.avg, avg_time.avg*1000, optimizer.param_groups[0]['lr']))
+
+        # validation
+        if iteration % opts.val_interval == 0:
+            print("... validation")
+            model.eval()
+            metrics.reset()
+            with torch.no_grad():
+                for _, images, labels, _ in valid_loader:
+                    images = images.to(device, non_blocking=True)
+
+                    # Forward propagation
+                    logits = model(images)
+
+                    # Pixel-wise labeling
+                    _, H, W = labels.shape
+                    logits = F.interpolate(logits, size=(H, W), 
+                                           mode="bilinear", align_corners=False)
+                    preds = torch.argmax(logits, dim=1).cpu().numpy()
+                    targets = labels.cpu().numpy()
+                    metrics.update(targets, preds)
+
+            set_train(model)
+            score = metrics.get_results()
+            print(metrics.to_str(score))
+
+            if score['Mean IoU'] > best_score:  # save best model
+                best_score = score['Mean IoU']
+                torch.save(
+                    model.module.state_dict(), os.path.join(checkpoint_dir, "checkpoint_best.pth")
+                )
             end_time = time.time()
-
-            # TensorBoard
-            if curr_iter % 10 == 0:
-                print(" Itrs %d/%d, Loss=%6f, Time=%.2f , LR=%.8f" %
-                  (curr_iter, CONFIG.SOLVER.ITER_MAX, 
-                   avg_loss.avg, avg_time.avg*1000, optimizer.param_groups[0]['lr']))
-                
-            # validation
-            if curr_iter % opts.val_interval == 0:
-                print("... validation")
-                metrics.reset()
-                with torch.no_grad():
-                    for _, images, labels, _ in valid_loader:
-                        images = images.to(device)
-
-                        # Forward propagation
-                        logits = model(images)
-
-                        # Pixel-wise labeling
-                        _, H, W = labels.shape
-                        logits = F.interpolate(logits, size=(H, W), 
-                                               mode="bilinear", align_corners=False)
-                        preds = torch.argmax(logits, dim=1).cpu().numpy()
-                        targets = labels.cpu().numpy()
-
-                        metrics.update(targets, preds)
-
-                score = metrics.get_results()
-                print(metrics.to_str(score))
-                
-                if score['Mean IoU'] > best_score:  # save best model
-                    best_score = score['Mean IoU']
-                    torch.save(
-                        model.module.state_dict(), os.path.join(checkpoint_dir, "checkpoint_best.pth")
-                    )
-                
-            if curr_iter > CONFIG.SOLVER.ITER_MAX:
-                return
-            
 
 if __name__ == "__main__":
     
