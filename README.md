@@ -19,8 +19,8 @@ We propose the discriminative region suppression (DRS) module that is a simple y
 1. Dataset Preparing
 
     * [Download PASCAL VOC 2012](http://host.robots.ox.ac.uk/pascal/VOC/voc2012/#devkit)
-    * you can obtain `SegmentationClassAug/` [[link]](https://drive.google.com/drive/folders/1_ik8n5Q4C77X-aIfKiqidFEDQ6zY9JNM?usp=sharing) (augmented with SBD dataset).
-    * [Download saliency maps](https://drive.google.com/drive/folders/1I-456-_OFVWhZdCBBPW9NSIkr0H3FBeP?usp=sharing) used for background cues.
+    * you can obtain `SegmentationClassAug/` [[download]](https://github.com/qjadud1994/DRS/releases/download/asset/SegmentationClassAug.zip) (augmented with SBD dataset).
+    * [Download saliency maps](https://github.com/qjadud1994/DRS/releases/download/asset/saliency_map.zip) used for background cues.
     
     ~~~
     # dataset structure
@@ -50,16 +50,16 @@ bash run.sh
 
 | Model | pretrained |
 | :----:  | :----:    |
-| VGG-16 with the learnable DRS | [DRS_learnable/best.pth](https://drive.google.com/drive/folders/1AyKsOmJd_241BNCYp_MKs9mCdr0i27Qs?usp=sharing) |
-| Refinement network | [Refine_DRS_learnable/best.pth](https://drive.google.com/drive/folders/1w50rhVTGBJXW4oCJ88DpsieXABSWJhaG?usp=sharing) |
+| VGG-16 with the learnable DRS | [DRS_learnable/best.pth](https://github.com/qjadud1994/DRS/releases/download/asset/DRS_learnable.pth) |
+| Refinement network | [Refine_DRS_learnable/best.pth](https://github.com/qjadud1994/DRS/releases/download/asset/Refine_DRS_learnable.pth) |
 |                    |          |
-| Pseudo Segmentation Labels | [refined_pseudo_segmentation_labels/](https://drive.google.com/drive/folders/1IS9_YCrRJwz3c7y3KwTET2_dYUPlNYo6?usp=sharing) |
+| Pseudo Segmentation Labels | [refined_pseudo_segmentation_labels/](https://github.com/qjadud1994/DRS/releases/download/asset/refined_pseudo_segmentation_labels.zip) |
 
 
 ## Training the DeepLab-V2 using pseudo labels
 We adopt the DeepLab-V2 pytorch implementation from https://github.com/kazuto1011/deeplab-pytorch.
 
-* According to the [DeepLab-V2 pytorch implementation](https://github.com/kazuto1011/deeplab-pytorch#download-pre-trained-caffemodels) , we requires an initial weights [[download]](https://drive.google.com/file/d/1Wj8Maj9KGQgwtDfvIp8FChsdAIgDvliT/view?usp=sharing).
+* According to the [DeepLab-V2 pytorch implementation](https://github.com/kazuto1011/deeplab-pytorch#download-pre-trained-caffemodels) , we requires an initial weights [[download]](https://github.com/qjadud1994/DRS/releases/download/asset/deeplabv1_resnet101-coco.pth).
 
 ~~~
 cd DeepLab-V2-PyTorch/
@@ -92,8 +92,8 @@ bash run.sh
 
 | Model | mIoU | mIoU + CRF | pretrained |
 | :----:  | :----: | :----: | :----: |
-| DeepLab-V2 with ResNet-101 | 69.4% | 70.4% | [[link]](https://drive.google.com/drive/folders/1zJnRI5WRnv4cL9XY5jAojwIcO7MrUwun?usp=sharing)
-| DeepLab-V3+ with ResNet-101 | 70.4% | 71.0% | [[link]](https://drive.google.com/file/d/1W1LV3gvBPRr2lIlWdvqZ-cs87qYT8Nax/view?usp=sharing)
+| DeepLab-V2 with ResNet-101 | 69.4% | 70.4% | [[link]](https://github.com/qjadud1994/DRS/releases/download/asset/Deeplabv2_pseudo_segmentation_labels.pth)
+| DeepLab-V3+ with ResNet-101 | 70.4% | 71.0% | [[link]](https://github.com/qjadud1994/DRS/releases/download/asset/Deeplabv3_pseudo_segmentation_labels.pth)
 
 * Note that the pretrained weight path
 `./DeepLab-V2-Pytorch/data/models/Deeplabv2_pseudo_segmentation_labels/deeplabv2_resnet101_msc/train_cls/checkpoint_final.pth`
